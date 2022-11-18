@@ -38,13 +38,20 @@ public class LoteriaSimples implements Loteria {
             throw new RuntimeException("Participante deve ser maior de idade para apostar!");
         }
         List<Jogo> jogos = new ArrayList<>();
-        adicionaNovoJogoAoParticipante(participante, jogos);
+        adicionaNovoJogoAoParticipante(jogos);
         jogosPorParticipante.put(participante, jogos);
     }
 
     private boolean participanteNaoEMaiorDeIdade(Participante participante){
         long idadeParticipante = ChronoUnit.YEARS.between(participante.getDataNascimento(), LocalDate.now());
         return !(idadeParticipante > 18);
+    }
+
+    private void adicionaNovoJogoAoParticipante(List<Jogo> jogos){
+        Jogo jogo = new Jogo(60);
+        List<Integer> numerosMarcados = sorteador.sortear(60);
+        jogo.marcarNumero(numerosMarcados.subList(0, 5));
+        jogos.add(jogo);
     }
 
     @Override
@@ -54,15 +61,8 @@ public class LoteriaSimples implements Loteria {
         }
 
         List<Jogo> jogos = jogosPorParticipante.get(participante);
-        adicionaNovoJogoAoParticipante(participante, jogos);
+        adicionaNovoJogoAoParticipante(jogos);
         return this;
-    }
-
-    private void adicionaNovoJogoAoParticipante(Participante participante, List<Jogo> jogos){
-        Jogo jogo = new Jogo(60);
-        List<Integer> numerosMarcados = sorteador.sortear(60);
-        jogo.marcarNumero(numerosMarcados.subList(0, 5));
-        jogos.add(jogo);
     }
 
     @Override
