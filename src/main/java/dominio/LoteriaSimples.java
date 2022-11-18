@@ -67,7 +67,7 @@ public class LoteriaSimples implements Loteria {
 
     @Override
     public BigDecimal calcularPremio() {
-        double quantidadeDeJogos = 0;
+        int quantidadeDeJogos = 0;
         for(Participante participante : participantes) {
             for(Jogo jogo : jogosPorParticipante.get(participante)) {
                 quantidadeDeJogos++;
