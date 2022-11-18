@@ -1,16 +1,14 @@
 package ui;
 
-import dominio.Loteria;
-import dominio.Participante;
-import dominio.SorteadorSimples;
-import dominio.LoteriaSimples;
+import dominio.*;
 
 import java.time.LocalDate;
 
 public class Principal {
 
     public static void main(String[] args) {
-        Loteria loteria = new LoteriaSimples(new SorteadorSimples());
+        Sorteador sorteador = new SorteadorSimples();
+        Loteria loteria = new LoteriaSimples(sorteador);
         Participante p = new Participante("Nathan", LocalDate.of(2000, 10, 10), "123.456.789-10", "nathan@gmail.com");
         Participante p2 = new Participante("Nathan 2", LocalDate.of(2001, 10, 10), "132476.789-10", "nathan2@gmail.com");
         Participante p3 = new Participante("Nathan 3", LocalDate.of(2002, 10, 10), "123 123 789 10", "nathan34@fatec.com.br");
