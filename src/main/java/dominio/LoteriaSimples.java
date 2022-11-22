@@ -67,9 +67,7 @@ public class LoteriaSimples implements Loteria {
     public BigDecimal calcularPremio() {
         int quantidadeDeJogos = 0;
         for(Participante participante : participantes.keySet()) {
-            for(Jogo jogo : participantes.get(participante)) {
-                quantidadeDeJogos++;
-            }
+            quantidadeDeJogos += participantes.get(participante).size();
         }
         return BigDecimal.valueOf(VALOR_POR_JOGO * quantidadeDeJogos);
     }
