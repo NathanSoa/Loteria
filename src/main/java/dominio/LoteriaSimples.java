@@ -9,28 +9,26 @@ public class LoteriaSimples implements Loteria {
 
     private static final double VALOR_POR_JOGO = 6;
 
-    private final Set<Participante> participantes;
-    private final Map<Participante, List<Jogo>> jogosPorParticipante;
+    private final Map<Participante, List<Jogo>> participantes;
     private final Sorteador sorteador;
 
     public LoteriaSimples(Sorteador sorteador) {
-        this.participantes = new HashSet<>();
-        this.jogosPorParticipante = new HashMap<>();
+        this.participantes = new HashMap<>();
         this.sorteador = sorteador;
     }
 
     @Override
     public Loteria addParticipante(Participante participante) {
-        if(EUmParticipanteNovo(participante)) {
-            adicionaParticipanteNoMapaComNovoJogo(participante);
+        if(NaoEUmParticipanteNovo(participante)) {
+            throw new RuntimeException("Participante já está cadastrado nesta aposta!");
         }
 
-        participantes.add(participante);
+        adicionaParticipanteNoMapaComNovoJogo(participante);
         return this;
     }
 
-    private boolean EUmParticipanteNovo(Participante participante) {
-        return !participantes.contains(participante);
+    private boolean NaoEUmParticipanteNovo(Participante participante) {
+        return participantes.get(participante) != null;
     }
 
     private void adicionaParticipanteNoMapaComNovoJogo(Participante participante) {
@@ -39,7 +37,7 @@ public class LoteriaSimples implements Loteria {
         }
         List<Jogo> jogos = new ArrayList<>();
         adicionaNovoJogoAoParticipante(jogos);
-        jogosPorParticipante.put(participante, jogos);
+        participantes.put(participante, jogos);
     }
 
     private boolean participanteNaoEMaiorDeIdade(Participante participante){
@@ -56,11 +54,11 @@ public class LoteriaSimples implements Loteria {
 
     @Override
     public Loteria addJogo(Participante participante) {
-        if(!participantes.contains(participante)) {
+        if(!participantes.containsKey(participante)) {
             throw new IllegalArgumentException("Participante não está apostando nessa loteria!");
         }
 
-        List<Jogo> jogos = jogosPorParticipante.get(participante);
+        List<Jogo> jogos = participantes.get(participante);
         adicionaNovoJogoAoParticipante(jogos);
         return this;
     }
@@ -68,8 +66,8 @@ public class LoteriaSimples implements Loteria {
     @Override
     public BigDecimal calcularPremio() {
         int quantidadeDeJogos = 0;
-        for(Participante participante : participantes) {
-            for(Jogo jogo : jogosPorParticipante.get(participante)) {
+        for(Participante participante : participantes.keySet()) {
+            for(Jogo jogo : participantes.get(participante)) {
                 quantidadeDeJogos++;
             }
         }
@@ -81,8 +79,8 @@ public class LoteriaSimples implements Loteria {
         List<Participante> vencedores = new ArrayList<>();
         List<Integer> jogoVencedor = sorteador.sortear(60);
 
-        for(Participante participante : participantes){
-            for(Jogo jogo : jogosPorParticipante.get(participante)) {
+        for(Participante participante : participantes.keySet()){
+            for(Jogo jogo : participantes.get(participante)) {
                 int acertos = 0;
 
                 for(int i = 0; i < 6; i++)
